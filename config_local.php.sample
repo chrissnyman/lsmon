@@ -1,0 +1,6 @@
+<?php
+        $DBurl = "";
+        $DBtoken = '';
+        $DBorg = '';
+        $DBbucket = '';
+?>
