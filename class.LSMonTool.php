@@ -33,7 +33,7 @@
         {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $path);
-            
+            $task_start_time = microtime(true);
             $start_time = round(microtime(true),2);
             curl_exec($ch);
             $end_time = round(microtime(true),2);
@@ -43,7 +43,7 @@
             $data = Point::measurement('download')
                 ->addTag("host=".$host, $group_string)
                 ->addField('mbps', $mbps)
-                ->time(microtime(true));
+                ->time($task_start_time);
             $this->dbConnection->write($data);
         }
 
