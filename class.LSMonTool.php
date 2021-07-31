@@ -31,6 +31,7 @@
 
         public function runDownloadTest($path, $group_string, $host, $size = 1)
         {
+            echo "runDownloadTest: $path";
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $path);
             $task_start_time = microtime(true);

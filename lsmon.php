@@ -8,25 +8,49 @@
     $tool->init();
 
     $args = getopt("s:m:");
-    switch ($args["s"]) {
-        case "portal": $server_name = "https://portal.amobia.com/temp";
-            break;
-        case "jhbmon": $server_name = "http://jhb-monitoring.amobia.com/temp";
-            break;
-        default: $server_name = "https://portal.amobia.com/temp";
-            break;
-    }
-
+    $host_list = explode(",","".$args["s"]);
+    $task = "";
     switch ($args["m"]) {
-        case "dl10": $tool->runDownloadTest($server_name."/10mb.tmp",$args["s"]." - 10mb",$hostname,10);
+        case "dl10": 
+                $task = "runDownloadTest";
+                $fileName = "10mb.tmp";
+                $fileSizeMB = 10;
             break;
-        case "dl100": $tool->runDownloadTest($server_name."/100mb.tmp",$args["s"]." - 100mb",$hostname,100);
+        case "dl100": 
+                $task = "runDownloadTest";
+                $fileName = "100mb.tmp";
+                $fileSizeMB = 100;
             break;
-        case "dl500": $tool->runDownloadTest($server_name."/500mb.tmp",$args["s"]." - 500mb",$hostname,500);
+        case "dl500": 
+                $task = "runDownloadTest";
+                $fileName = "500mb.tmp";
+                $fileSizeMB = 500;
             break;
 
         case "iftraf":
                 $tool->getSNMPIfTraffic("10.0.0.1","ether1","cpe - traffic download");
+            break;
+    }
+    
+    switch($task) {
+        case "runDownloadTest" : 
+                foreach ($host_list as $cur_host) {
+                    switch ($cur_host) {
+                        case "portal": 
+                                $serverName = "https://portal.amobia.com/temp";
+                            break;
+                        case "jhbmon": 
+                                $serverName = "http://jhb-monitoring.amobia.com/temp";
+                            break;
+                        default: 
+                                $serverName = "https://portal.amobia.com/temp";
+                            break;
+                    }
+                    $tool->runDownloadTest($serverName."/".$fileName,$args["s"]." - ".$fileSizeMB."MB",$hostname,$fileSizeMB);
+                }
+            break;
+        case "getSNMPIfTraffic" : 
+            $tool->getSNMPIfTraffic("10.0.0.1","ether1","cpe - traffic download");
             break;
     }
     // $tool->runDownloadTest("https://portal.amobia.com/temp/100mb.tmp","portal - 100mb",100);
