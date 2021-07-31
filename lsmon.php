@@ -35,18 +35,7 @@
     switch($task) {
         case "runDownloadTest" : 
                 foreach ($host_list as $cur_host) {
-                    switch ($cur_host) {
-                        case "portal": 
-                                $serverName = "https://portal.amobia.com/temp";
-                            break;
-                        case "jhbmon": 
-                                $serverName = "http://jhb-monitoring.amobia.com/temp";
-                            break;
-                        default: 
-                                $serverName = "https://portal.amobia.com/temp";
-                            break;
-                    }
-                    $tool->runDownloadTest($serverName."/".$fileName,$args["s"]." - ".$fileSizeMB."MB",$hostname,$fileSizeMB);
+                    $tool->runDownloadTest($serverList[$cur_host]."/".$fileName,$cur_host." - ".$fileSizeMB."MB",$hostname,$fileSizeMB);
                 }
             break;
         case "getSNMPIfTraffic" : 
