@@ -64,13 +64,13 @@
                     if ($outOctets == NULL) { $outOctets = 0; } else { $outOctets = floatval($outOctets); }
 
                     $data = Point::measurement('iftraf')
-                    ->addTag("host=".$hostname, $interfaceDesc." - Download")
+                    ->addTag("host=".$hostname, $interfaceDesc." - Upload")
                     ->addField('Bytes', $inOctet)
                     ->time($task_start_time);
                     $this->dbConnection->write($data);
 
                     $data = Point::measurement('iftraf')
-                    ->addTag("host=".$hostname, $interfaceDesc." - Upload")
+                    ->addTag("host=".$hostname, $interfaceDesc." - Download")
                     ->addField('Bytes', $outOctets)
                     ->time($task_start_time);
                     $this->dbConnection->write($data);

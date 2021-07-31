@@ -4,3 +4,4 @@
 */5 *     * * *     root   /root/lsmon/lsmon.php -s portal,jhbmon -m dl10
 1,21,41 *     * * *     root   /root/lsmon/lsmon.php -s portal,jhbmon -m dl100
 3 *     * * *     root   /root/lsmon/lsmon.php -s portal,jhbmon -m dl500
+* *     * * *     root   /root/lsmon/lsmon.php -m iftraf
