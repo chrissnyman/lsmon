@@ -1,3 +1,4 @@
+#!/usr/local/bin/php
 <?php
     require 'vendor/autoload.php';
     require 'class.LSMonTool.php';
