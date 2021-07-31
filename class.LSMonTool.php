@@ -42,7 +42,7 @@
             $mbps = round($size*8/$duration,3);
             $data = Point::measurement('download')
                 ->addTag("host=".$host, $group_string)
-                ->addField('s', $mbps)
+                ->addField('mbps', $mbps)
                 ->time(microtime(true));
             $this->dbConnection->write($data);
         }

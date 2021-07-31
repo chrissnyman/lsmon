@@ -1,0 +1,6 @@
+# m h dom mon dow user  command
+
+# Look for and purge old sessions every 30 minutes
+*/5 *     * * *     root   /root/lsmon/lsmon.php -s portal -m dl10
+*/20 *     * * *     root   /root/lsmon/lsmon.php -s portal -m dl100
+0 *     * * *     root   /root/lsmon/lsmon.php -s portal -m dl500
