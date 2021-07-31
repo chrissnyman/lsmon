@@ -65,13 +65,13 @@
 
                     $data = Point::measurement('iftraf')
                     ->addTag("host=".$hostname, $interfaceDesc." - Upload")
-                    ->addField('Bytes', $inOctet)
+                    ->addField('Bytes', $inOctet*8)
                     ->time($task_start_time);
                     $this->dbConnection->write($data);
 
                     $data = Point::measurement('iftraf')
                     ->addTag("host=".$hostname, $interfaceDesc." - Download")
-                    ->addField('Bytes', $outOctets)
+                    ->addField('Bytes', $outOctets*8)
                     ->time($task_start_time);
                     $this->dbConnection->write($data);
                 }
