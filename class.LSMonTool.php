@@ -18,15 +18,14 @@
          */
         private $dbConnection;
 
-        public function __construct($DBurl, $DBtoken, $DBorg, $DBbucket)
+        public function __construct()
+        {
+        }
+        
+        public function initDB($DBurl, $DBtoken, $DBorg, $DBbucket)
         {
             $this->dbConnection = new IndexDBCloudClient($DBurl, $DBtoken, $DBorg, $DBbucket);
-        }
-
-        public function init()
-        {
             $this->dbConnection->connect();
-
         }
 
         public function runDownloadTest($path, $group_string, $host, $size = 1)
@@ -47,9 +46,36 @@
             $this->dbConnection->write($data);
         }
 
-        public function getSNMPIfTraffic($ip,$interface,$description)
+        public function getSNMPIfTraffic($ipAddress, $community, $hostname, $interface, $interfaceDesc)
         {
+            $task_start_time = microtime(true);
+            $interfaceList = snmprealwalk($ipAddress, $community, "1.3.6.1.2.1.2.2.1.2",500000,3);
+            foreach ($interfaceList as $interfaceOID => $interfaceName) {
+                if ( $interfaceName == "STRING: \"$interface\"") {
+                    $oidParts = explode(".",$interfaceOID);
+                    $intID = $oidParts[count($oidParts)-1];
 
+                    $inOctetParts = explode(": ", snmpget($ipAddress, $community, ".1.3.6.1.2.1.31.1.1.1.10.".$intID,500000,3));
+                    $inOctet = $inOctetParts[1];
+                    if ($inOctet == NULL) { $inOctet = 0; } else { $inOctet = floatval($inOctet); }
+                    
+                    $outOctetsParts = explode(": ", snmpget($ipAddress, $community, ".1.3.6.1.2.1.31.1.1.1.6.".$intID,500000,3));
+                    $outOctets = $outOctetsParts[1];
+                    if ($outOctets == NULL) { $outOctets = 0; } else { $outOctets = floatval($outOctets); }
+
+                    $data = Point::measurement('iftraf')
+                    ->addTag("host=".$hostname, $interfaceDesc." - Download")
+                    ->addField('Bytes', $inOctet)
+                    ->time($task_start_time);
+                    $this->dbConnection->write($data);
+
+                    $data = Point::measurement('iftraf')
+                    ->addTag("host=".$hostname, $interfaceDesc." - Upload")
+                    ->addField('Bytes', $outOctets)
+                    ->time($task_start_time);
+                    $this->dbConnection->write($data);
+                }
+            }
         }
 
         public function query($query)

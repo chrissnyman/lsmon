@@ -4,11 +4,10 @@
     require 'class.LSMonTool.php';
     require 'config_local.php';
     
-    $tool = new \LSMon\LSMonTool($DBurl, $DBtoken, $DBorg, $DBbucket);
-    $tool->init();
+    $tool = new \LSMon\LSMonTool();
+    $tool->initDB($DBurl, $DBtoken, $DBorg, $DBbucket);
 
     $args = getopt("s:m:");
-    $host_list = explode(",","".$args["s"]);
     $task = "";
     switch ($args["m"]) {
         case "dl10": 
@@ -28,19 +27,19 @@
             break;
 
         case "iftraf":
-                $tool->getSNMPIfTraffic("10.0.0.1","ether1","cpe - traffic download");
+                $task = "getSNMPIfTraffic";
             break;
     }
     
     switch($task) {
         case "runDownloadTest" : 
+                $host_list = explode(",","".$args["s"]);
                 foreach ($host_list as $cur_host) {
                     $tool->runDownloadTest($serverList[$cur_host]."/".$fileName,$cur_host." - ".$fileSizeMB."MB",$hostname,$fileSizeMB);
                 }
             break;
         case "getSNMPIfTraffic" : 
-            $tool->getSNMPIfTraffic("10.0.0.1","ether1","cpe - traffic download");
+                $tool->getSNMPIfTraffic("10.0.0.1","lsmon",$hostname,"pppoe-AmobiaMetroFibre","AmobiaMetroFibre");
             break;
     }
-    // $tool->runDownloadTest("https://portal.amobia.com/temp/100mb.tmp","portal - 100mb",100);
 ?>
